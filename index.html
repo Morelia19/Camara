@@ -6,12 +6,14 @@
 </head>
 <body>
     <video id="videoElement" autoplay playsinline></video>
-    <input type="range" min="-100" max="100" value="0" step="1" oninput="adjustBrightness(this.value)">
+    <input type="range" id="brightnessRange" min="-100" max="100" value="0" step="1" oninput="adjustBrightness(this.value)">
+    <input type="range" id="skinToneRange" min="-100" max="100" value="0" step="1" oninput="adjustSkinTone(this.value)">
     <button onclick="startCamera()">Encender cámara</button>
     <button onclick="stopCamera()">Apagar cámara</button>
     <script>
         let stream; 
         let videoStream;
+        const videoElement = document.getElementById('videoElement');
 
         const selectCamera = async () => {
             try {
@@ -20,7 +22,6 @@
                 const selectedDevice = videoDevices[0]; 
 
                 stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: selectedDevice.deviceId } } });
-                const videoElement = document.getElementById('videoElement');
                 videoElement.srcObject = stream;
                 videoStream = stream.clone(); 
             } catch (error) {
@@ -44,9 +45,12 @@
 
         const adjustBrightness = (value) => {
             if (!videoStream) return;
-
-            const videoElement = document.getElementById('videoElement');
             videoElement.style.filter = `brightness(${parseInt(value)}%)`;
+        };
+
+        const adjustSkinTone = (value) => {
+            if (!videoStream) return;
+            videoElement.style.filter = `sepia(${parseInt(value)}%)`;
         };
     </script>
 </body>
